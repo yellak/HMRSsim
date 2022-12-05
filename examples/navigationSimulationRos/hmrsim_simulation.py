@@ -1,8 +1,9 @@
 from simulator.systems.MovementProcessor import MovementProcessor
 from simulator.systems.CollisionProcessor import CollisionProcessor
 from simulator.systems.PathProcessor import PathProcessor
-import simulator.systems.GotoDESProcessor as NavigationSystem
+import simulator.systems.MoveCommandsDESProcessor as NavigationSystem
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
+import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
 import simulator.systems.SeerPlugin as Seer
 from simulator.systems.Nav2System import Nav2System
 from simulator.systems.RosControlPlugin import RosControlPlugin
@@ -54,6 +55,7 @@ def main():
         (NavigationSystemProcess,),
         (ros_control.process, ros_control.end),
         (Nav2System.end_path_event_listener,),
+        (StopCollisionProcessor.process,),
         (RobotSpawnDESProcessor.init(ros_control=ros_control),)
     ]
 

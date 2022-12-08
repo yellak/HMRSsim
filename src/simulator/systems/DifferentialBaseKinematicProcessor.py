@@ -45,17 +45,19 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
                 else:
                     vel.alpha = max(-eng.angular_speed, dw)
 
-                vel_x = eng.speed * math.cos(pos_angle)
-                vel_y = -eng.speed * math.sin(pos_angle)
-
                 dx = point[0] - pos_center[0]
+                dy = point[1] - pos_center[1]
+
+                vel_mag = math.sqrt(dx**2 + dy**2)
+                vel_x = (dx * eng.speed) / vel_mag
+                vel_y = (dy * eng.speed) / vel_mag
+                
                 if dx > 0:
                     vel.x = min(vel_x, dx)
                 else:
-                    vel.x = max(- vel_x, dx)
+                    vel.x = max(vel_x, dx)
 
-                dy = point[1] - pos_center[1]
                 if dy > 0:
                     vel.y = min(vel_y, dy)
                 else:
-                    vel.y = max(- vel_y, dy)
+                    vel.y = max(vel_y, dy)

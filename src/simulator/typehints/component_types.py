@@ -9,6 +9,12 @@ ERROR = typing.NamedTuple('ErrorEvent', [('type', str), ('ent', int), ('payload'
 class Component:
     pass
 
+# Payloads and tags convention related to MoveCommands events
+MoveCommandPayload = typing.NamedTuple('MoveCommandPayload', [('entity', int), ('target', list), ('orientation', float)])
+MoveCommandEventTag = 'MoveCommandEvent'
+EndOfMovementPayload = typing.NamedTuple('EndOfMovementPayload', [('ent', int), ('timestamp', str), ('goal', Point), ('orientation', float)])
+EndOfMovementTag = 'EndOfMovement'
+
 # Payloads and tags convention related to Goto events
 GotoPoiPayload = typing.NamedTuple('GotoPoiPayload', [('entity', int), ('target', str)])
 GotoPosPayload = typing.NamedTuple('GotoPosPayload', [('entity', int), ('target', list)])

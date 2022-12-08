@@ -3,7 +3,7 @@ from simulator.components.Velocity import Velocity
 from simulator.components.Path import Path
 from simulator.components.NavToPoseRosGoal import NavToPoseRosGoal
 from simulator.typehints.ros_types import RosActionServer
-from simulator.typehints.component_types import EVENT, GotoPosPayload, GotoPoiPayload, GotoPosEventTag, GotoPoiEventTag, EndOfPathTag
+from simulator.typehints.component_types import EVENT, MoveCommandPayload, MoveCommandEventTag, EndOfMovementTag
 from simulator.typehints.dict_types import SystemArgs
 
 import logging
@@ -42,7 +42,7 @@ class Nav2System(RosActionServer):
         self.robot_name = kwargs.get('robot_name', None)
         self.destiny = None
 
-    def end_path_event_listener(kwargs: SystemArgs):
+    def end_of_movement_event_listener(kwargs: SystemArgs):
         """
         This method waits for an event that indicates that an entity arrived at destiny is triggered.
         When a ROS entity arrives at destination, a result is sent to the client.
@@ -50,8 +50,8 @@ class Nav2System(RosActionServer):
         event_store = kwargs.get('EVENT_STORE')
         world = kwargs.get('WORLD')
         while True:
-            # An EndOfPathTag indicates that a robot arrived
-            end_event = yield event_store.get(lambda e: e.type == EndOfPathTag)
+            # An EndOfMovementTag indicates that a robot arrived
+            end_event = yield event_store.get(lambda e: e.type == EndOfMovementTag)
 
             for ent, (vel, pos, ros_goal) in world.get_components(Velocity, Position, NavToPoseRosGoal):
                 if end_event.payload.ent == ent and ros_goal.goal_handle is not None:
@@ -115,7 +115,7 @@ class Nav2System(RosActionServer):
             ros_goal.goal_handle = goal_handle
             ros_goal.x = pose.position.x
             ros_goal.y = pose.position.y
-            self.go_to(ent, [str(pose.position.x), str(pose.position.y)])
+            self.go_to(ent, [str(pose.position.x), str(pose.position.y), str(pose.orientation.w)])
 
     def send_result(self, goal_handle: ServerGoalHandle):
         """
@@ -131,13 +131,9 @@ class Nav2System(RosActionServer):
         """
         This is gonna add a new event to move an entity towards it's destination.
         """
-
-        if len(args) == 1: # it's a POI
-            payload = GotoPoiPayload(ent, args[0])
-            new_event = EVENT(GotoPoiEventTag, payload)
-        elif len(args) == 2:
-            payload = GotoPosPayload(ent, [float(args[0]), float(args[1])])
-            new_event = EVENT(GotoPosEventTag, payload)
+        if len(args) == 3:
+            payload = MoveCommandPayload(ent, [float(args[0]), float(args[1])], float(args[2]))
+            new_event = EVENT(MoveCommandEventTag, payload)
         else:
             raise Exception('GO instruction failed. Go <poi> OR Go <x> <y>')
         if new_event:

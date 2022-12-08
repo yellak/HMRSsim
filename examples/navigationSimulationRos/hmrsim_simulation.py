@@ -1,6 +1,6 @@
 from simulator.systems.MovementProcessor import MovementProcessor
 from simulator.systems.CollisionProcessor import CollisionProcessor
-from simulator.systems.PathProcessor import PathProcessor
+from simulator.systems.DifferentialBaseKinematicProcessor import DifferentialBaseKinematicProcessor as DiffBaseKinematicProcessor  
 import simulator.systems.MoveCommandsDESProcessor as NavigationSystem
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
 import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
@@ -46,7 +46,7 @@ def main():
     normal_processors = [
         MovementProcessor(minx=0, miny=0, maxx=width, maxy=height),
         CollisionProcessor(),
-        PathProcessor()
+        DiffBaseKinematicProcessor(),
     ]
 
     # Defines DES processors
@@ -54,7 +54,7 @@ def main():
         Seer.init([ros2.seer_consumer], 0.25, False),
         (NavigationSystemProcess,),
         (ros_control.process, ros_control.end),
-        (Nav2System.end_path_event_listener,),
+        (Nav2System.end_of_movement_event_listener,),
         (StopCollisionProcessor.process,),
         (RobotSpawnDESProcessor.init(ros_control=ros_control),)
     ]

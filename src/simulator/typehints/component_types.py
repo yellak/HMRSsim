@@ -12,7 +12,7 @@ class Component:
 # Payloads and tags convention related to MoveCommands events
 MoveCommandPayload = typing.NamedTuple('MoveCommandPayload', [('entity', int), ('target', list), ('orientation', float)])
 MoveCommandEventTag = 'MoveCommandEvent'
-EndOfMovementPayload = typing.NamedTuple('EndOfMovementPayload', [('ent', int), ('timestamp', str), ('goal', Point), ('orientation', float)])
+EndOfMovementPayload = typing.NamedTuple('EndOfMovementPayload', [('ent', int), ('timestamp', str), ('target', Point), ('orientation', float)])
 EndOfMovementTag = 'EndOfMovement'
 
 # Payloads and tags convention related to Goto events

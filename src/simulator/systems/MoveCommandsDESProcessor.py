@@ -1,7 +1,7 @@
 import logging
 from simulator.components.Path import Path
 from simulator.components.Map import Map
-from simulator.components.Goal import Goal
+from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Position import Position
 
 from simulator.typehints.component_types import EVENT, ERROR, MoveCommandPayload, MoveCommandEventTag
@@ -27,7 +27,7 @@ def init(ros_control=None):
             if target == source:
                 logger.warning("WARN - Already at destination")
                 continue
-            new_goal = Goal(target, orientation)
+            new_goal = WayPointGoal(target, orientation)
             logger.info(f"New move command received: {new_goal}")
             world.add_component(payload.entity, new_goal)
             

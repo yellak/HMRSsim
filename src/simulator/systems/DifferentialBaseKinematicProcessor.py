@@ -2,62 +2,46 @@ import esper
 import math
 import logging
 from simulator.typehints.dict_types import SystemArgs
+import numpy as np
 
 from simpy import FilterStore
 
-from simulator.components.Goal import Goal
+from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
-from simulator.components.Engine import Engine
-from simulator.typehints.component_types import EVENT, EndOfMovementPayload, EndOfMovementTag 
+from simulator.components.MovableBase import MovableBase
+from simulator.systems.controllers.Controller import Controller
+from simulator.typehints.component_types import EVENT, EndOfMovementPayload, EndOfMovementTag, Point 
 
 class DifferentialBaseKinematicProcessor(esper.Processor):
-    def __init__(self):
+    def __init__(self, controller: Controller):
         super().__init__()
+        self.controller = controller
         self.logger = logging.getLogger(__name__)
 
     def process(self, kwargs: SystemArgs):
         event_store: FilterStore = kwargs.get('EVENT_STORE', None)
         env = kwargs.get('ENV', None)
-        for ent, (pos, goal, eng, vel) in self.world.get_components(Position, Goal, Engine, Velocity):
+        for ent, (pos, wp_goal, mov_base, vel) in self.world.get_components(Position, WayPointGoal, MovableBase, Velocity):
 
-            eng.speed += eng.acceleration
-            eng.speed = eng.speed if eng.speed < eng.max_speed else eng.max_speed
-
-            point = goal.point
-            goal_angle = goal.angle
+            point = wp_goal.point
             pos_center = pos.center
             pos_angle = pos.angle
-            if pos_center[0] == point[0] and pos_center[1] == point[1] and pos_angle == goal_angle:
+            wp_goal_angle = wp_goal.angle
+
+            if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(goal_angle * 100):
                 vel.x = 0
                 vel.y = 0
                 vel.alpha = 0
                 pos.changed = False
-                end_of_movement = EVENT(EndOfMovementTag, EndOfMovementPayload(ent, str(env.now), goal=goal.point, orientation=goal.angle))
+                end_of_movement = EVENT(EndOfMovementTag, EndOfMovementPayload(ent, str(env.now), target=wp_goal.point, orientation=goal.angle))
                 event_store.put(end_of_movement )
-                self.world.remove_component(ent, Goal)
+                self.world.remove_component(ent, WayPointGoal)
                 return
             else:
-
-                dw = goal_angle - pos_angle
-                if dw > 0:
-                    vel.alpha = min(eng.angular_speed, dw)
-                else:
-                    vel.alpha = max(-eng.angular_speed, dw)
-
-                dx = point[0] - pos_center[0]
-                dy = point[1] - pos_center[1]
-
-                vel_mag = math.sqrt(dx**2 + dy**2)
-                vel_x = (dx * eng.speed) / vel_mag
-                vel_y = (dy * eng.speed) / vel_mag
-                
-                if dx > 0:
-                    vel.x = min(vel_x, dx)
-                else:
-                    vel.x = max(vel_x, dx)
-
-                if dy > 0:
-                    vel.y = min(vel_y, dy)
-                else:
-                    vel.y = max(vel_y, dy)
+                self.controller.max_angular_speed = mov_base.max_speed 
+                self.controller.max_linear_speed = mov_base.angular_speed
+                v, w = self.controller.get_control_inputs(np.deg2rad(pos_angle), np.deg2rad(wp_goal_angle), pos_center, point)
+                vel.x = v * math.cos(pos_angle)
+                vel.y = v * math.sin(pos_angle)
+                vel.alpha = np.rad2deg(w)

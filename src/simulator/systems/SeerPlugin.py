@@ -81,7 +81,7 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
                     'y': position.y,
                     'width': position.w,
                     'height': position.h,
-                    'style': skeleton.style
+                    'style': skeleton.style + f"rotation={position.angle};"
                 }
                 new_message[skeleton.id] = data
                 last_round[ent] = (2, skeleton.id)

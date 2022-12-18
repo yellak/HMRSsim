@@ -7,6 +7,7 @@ import simulator.systems.ManageObjects as ObjectManager
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
 import simulator.systems.SeerPlugin as Seer
 import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
+from simulator.systems.controllers.Pid import Pid
 from simulator.systems.Nav2System import Nav2System
 from simulator.systems.RosControlPlugin import RosControlPlugin
 
@@ -54,7 +55,7 @@ def main():
     normal_processors = [
         MovementProcessor(minx=0, miny=0, maxx=width, maxy=height),
         CollisionProcessor(),
-        DiffBaseKinematicProcessor(),
+        DiffBaseKinematicProcessor(Pid()),
     ]
 
     # Defines DES processors

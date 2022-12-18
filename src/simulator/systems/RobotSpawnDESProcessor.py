@@ -70,7 +70,8 @@ def init(ros_control=None):
                     "NavToPoseRosGoal": [robot.name],
                     "Skeleton": ['robot_' + str(
                         ent_id), "rounded=0;whiteSpace=wrap;html=1;strokeColor=#00FF00;fillColor=#000000;width=50;height=50;"],
-                    "Velocity": [0, 0]
+                    "Velocity": [0, 0],
+                    "MovableBase": [5, 0.5]
                     # "Script": [["Go exit"], 10]
                 })
             ent = world.create_entity(*initialized_components)

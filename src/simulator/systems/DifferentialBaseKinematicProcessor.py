@@ -29,12 +29,12 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
             pos_angle = pos.angle
             wp_goal_angle = wp_goal.angle
 
-            if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(goal_angle * 100):
+            if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(wp_goal_angle * 100):
                 vel.x = 0
                 vel.y = 0
                 vel.alpha = 0
                 pos.changed = False
-                end_of_movement = EVENT(EndOfMovementTag, EndOfMovementPayload(ent, str(env.now), target=wp_goal.point, orientation=goal.angle))
+                end_of_movement = EVENT(EndOfMovementTag, EndOfMovementPayload(ent, str(env.now), target=wp_goal.point, orientation=wp_goal.angle))
                 event_store.put(end_of_movement )
                 self.world.remove_component(ent, WayPointGoal)
                 return

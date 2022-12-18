@@ -2,9 +2,18 @@ from simulator.utils.geometry import *
 from simulator.systems.controllers.Controller import Controller
 
 # Based in https://github.com/zainkhan-afk/Differential-Drive-Robot-Navigation
-class Pid(Controller):
-    def __init__(self, kp_linear = 0.1, kd_linear = 0.1, ki_linear = 0,
-        kp_angular = 0.1, kd_angular = 0.1, ki_angular = 0, max_linear_speed = 5.0, max_angular_speed = 5.0) -> None:
+class PID(Controller):
+    def __init__(
+        self,
+        kp_linear = 0.1, 
+        kd_linear = 0.1, 
+        ki_linear = 0,
+        kp_angular = 0.1,
+        kd_angular = 0.1,
+        ki_angular = 0,
+        max_linear_speed = 5.0,
+        max_angular_speed = 5.0
+    ) -> None:
 
         self.kp_linear = kp_linear
         self.kd_linear = kd_linear

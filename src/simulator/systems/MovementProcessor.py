@@ -2,6 +2,7 @@ import esper
 import logging
 
 from datetime import datetime, timedelta
+from simulator.typehints.dict_types import SystemArgs
 
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
@@ -20,8 +21,9 @@ class MovementProcessor(esper.Processor):
         self.runs = 0
         self.created_tiles = False
 
-    def process(self, env):
+    def process(self, kwargs: SystemArgs):
         logger = logging.getLogger(__name__)
+        dt: float = kwargs.get('DELTA_TIME', None)
         # start = datetime.now()
 
         # The Movement Processor is responsible for managing the tiling of the simulation
@@ -36,8 +38,8 @@ class MovementProcessor(esper.Processor):
         # This will iterate over every Entity that has BOTH of these components:
         for ent, (vel, pos) in self.world.get_components(Velocity, Position):
             # old = pos.center # DEBUG
-            new_x = max(self.minx, pos.x + vel.x)
-            new_y = max(self.miny, pos.y + vel.y)
+            new_x = max(self.minx, pos.x + (vel.x * dt))
+            new_y = max(self.miny, pos.y + (vel.y * dt))
 
             if pos.x != new_x or pos.y != new_y or vel.alpha:
                 # print(f'MOVE {ent} - vel {vel}')

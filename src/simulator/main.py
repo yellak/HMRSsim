@@ -15,6 +15,7 @@ import typing
 from simulator import map_parser
 
 from datetime import datetime, timedelta
+from time import time
 from pathlib import Path
 
 from simulator.components.Inventory import Inventory
@@ -150,12 +151,14 @@ class Simulator:
         self.EXIT: bool = False
         self.ENV = simpy.Environment()
         self.EXIT_EVENT = self.ENV.event()
+        self.frame_start = 0
         self.KWARGS: SystemArgs = {
             "ENV": self.ENV,
             "WORLD": self.world,
             "OBJECTS": self.objects,
             "DRAW2ENT": self.draw2ent,
             "INTERACTIVE": self.interactive,
+            "DELTA_TIME": 0,
             "_KILL_SWITCH": self.EXIT_EVENT,
             "EVENT_STORE": simpy.FilterStore(self.ENV),
             "WINDOW_OPTIONS": (self.window_dimensions, self.DEFAULT_LINE_WIDTH),
@@ -220,6 +223,12 @@ class Simulator:
         if entity_definition.get('isObject', False):
             self.objects.append((ent, ent_id))
 
+    def calculate_delta_time(self):
+        new_frame_start = time()
+        dt = new_frame_start - self.frame_start
+        self.frame_start = new_frame_start 
+        self.KWARGS['DELTA_TIME'] = dt
+
     def simulation_loop(self):
         """
         The simulation loop
@@ -233,6 +242,7 @@ class Simulator:
         # Other processors
         while not self.EXIT:
             start = datetime.now()
+            self.calculate_delta_time()
             if sleep_interval:
                 process_esper_systems(self.KWARGS)
             # # ticks on the clock

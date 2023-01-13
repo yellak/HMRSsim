@@ -1,7 +1,8 @@
 {
     "context": ".",
-    "map": "examples/hospitalSimulationRos/hospital_scenario.drawio",
+    "map": "maze_scenario.drawio",
     "FPS": 60,
     "DLW": 10,
+    "duration": 10,
     "verbose": 20
 }

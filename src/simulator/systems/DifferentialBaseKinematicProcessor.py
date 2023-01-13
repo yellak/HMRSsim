@@ -10,24 +10,30 @@ from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
 from simulator.components.MovableBase import MovableBase
-from simulator.systems.controllers.Controller import Controller
+from simulator.components.LinearVelocityControl import LinearVelocityControl 
+from simulator.components.AngularVelocityControl import AngularVelocityControl 
+from simulator.systems.controllers.PID import PID
 from simulator.typehints.component_types import EVENT, EndOfMovementPayload, EndOfMovementTag, Point 
+from simulator.utils.geometry import get_angle
 
 class DifferentialBaseKinematicProcessor(esper.Processor):
-    def __init__(self, controller: Controller):
+    def __init__(self):
         super().__init__()
-        self.controller = controller
+        self.controller = PID()
         self.logger = logging.getLogger(__name__)
 
     def process(self, kwargs: SystemArgs):
         event_store: FilterStore = kwargs.get('EVENT_STORE', None)
         env = kwargs.get('ENV', None)
-        for ent, (pos, wp_goal, mov_base, vel) in self.world.get_components(Position, WayPointGoal, MovableBase, Velocity):
+        dt: float = kwargs.get('DELTA_TIME', None)
+        for ent, (pos, vel, wp_goal, mov_base, lv_ctrl, av_ctrl) in self.world.get_components(Position, Velocity, WayPointGoal, MovableBase, LinearVelocityControl, AngularVelocityControl):
 
             point = wp_goal.point
             pos_center = pos.center
             pos_angle = pos.angle
-            wp_goal_angle = wp_goal.angle
+            # The negative signal is because the vertical coordinate (y axe) is inverse
+            wp_goal_angle = - get_angle(pos_center, point)
+            self.logger.info(f'dt: {dt}')
 
             if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(wp_goal_angle * 100):
                 vel.x = 0
@@ -39,9 +45,16 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
                 self.world.remove_component(ent, WayPointGoal)
                 return
             else:
-                self.controller.max_angular_speed = mov_base.max_speed 
-                self.controller.max_linear_speed = mov_base.angular_speed
-                v, w = self.controller.get_control_inputs(np.deg2rad(pos_angle), np.deg2rad(wp_goal_angle), pos_center, point)
-                vel.x = v * math.cos(pos_angle)
-                vel.y = v * math.sin(pos_angle)
-                vel.alpha = np.rad2deg(w)
+                # v, w = self.controller.get_control_inputs(np.deg2rad(pos_angle), np.deg2rad(wp_goal_angle), pos_center, point)
+                v = self.controller.get_output(lv_ctrl, pos_center, point, dt)
+                self.logger.info(f'linear velocity: {v}')
+                # v = 0
+                w = self.controller.get_output(av_ctrl, np.deg2rad(pos_angle), wp_goal_angle, dt)
+                self.logger.info(f'angular velocity: {w}')
+
+                vel.x = v * math.cos(np.deg2rad(pos_angle))
+
+                # The negative signal in vel y and omega, is because the vertical coordinate (y axe) is inverse
+                vel.y = - v * math.sin(np.deg2rad(pos_angle))
+                vel.alpha = - np.rad2deg(w)
+                self.logger.info(f'velocity: x={vel.x}, y={vel.y}, omega={vel.alpha}')

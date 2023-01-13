@@ -39,6 +39,8 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
 
     def process(kwargs: SystemArgs):
         event_store = kwargs.get('EVENT_STORE', None)
+        draw2ent = kwargs.get('DRAW2ENT', None)
+        objects = kwargs.get('OBJECTS', None)
         world: World = kwargs.get('WORLD', None)
         env: Environment = kwargs.get('ENV', None)
         msg_idx = 0
@@ -75,13 +77,20 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
                     last_round[ent] = (2, skeleton.id)
                     continue
 
+                # Check if is a robot to add rotation attribute
+                isRobot = False
+                object_ = [item for item in objects if item[0] == ent]
+                if len(object_) > 0:
+                    ent_id = object_[0][1]
+                    isRobot = draw2ent[ent_id][1]['type'] == 'robot'
+
                 data = {
                     'value': skeleton.value,
                     'x': position.x,
                     'y': position.y,
                     'width': position.w,
                     'height': position.h,
-                    'style': skeleton.style + f"rotation={position.angle};"
+                    'style': skeleton.style + (f"rotation={position.angle};" if isRobot else "")
                 }
                 new_message[skeleton.id] = data
                 last_round[ent] = (2, skeleton.id)

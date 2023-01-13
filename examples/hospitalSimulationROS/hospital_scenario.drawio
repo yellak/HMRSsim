@@ -1,12 +1,12 @@
 <mxfile host="65bd71144e">
     <diagram id="Yp99EcE86TbjtTeTYBdj" name="Hospital Scenario 0">
-        <mxGraphModel dx="765" dy="620" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" background="#F1FAEE" math="0" shadow="0">
+        <mxGraphModel dx="441" dy="241" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" background="#F1FAEE" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <object label="&lt;font color=&quot;#000000&quot;&gt;Robot&lt;/font&gt;" type="robot" collision_tag="stopEvent" component_Claw="[80, 1]" name="wall_e" id="XaaZAw79OCWD7nJUf5TW-4">
-                    <mxCell style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#B09500;fontColor=#ffffff;fillColor=#e3c800;" parent="1" vertex="1">
-                        <mxGeometry x="500" y="65" width="45" height="30" as="geometry"/>
+                <object label="&lt;font color=&quot;#000000&quot;&gt;Robot&lt;/font&gt;" type="robot" collision_tag="stopEvent" component_Claw="[80, 1]" component_Script="[[&quot;Go collisionWall&quot;], 0]" id="XaaZAw79OCWD7nJUf5TW-4">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#B09500;fontColor=#ffffff;fillColor=#e3c800;" parent="1" vertex="1">
+                        <mxGeometry x="500" y="65" width="30" height="30" as="geometry"/>
                     </mxCell>
                 </object>
                 <mxCell id="XaaZAw79OCWD7nJUf5TW-5" value="" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;shape=mxgraph.floorplan.wall;fillColor=#A8DADC;direction=south;strokeColor=#457B9D;fontColor=#1D3557;" parent="1" vertex="1">
@@ -70,7 +70,7 @@
                     <mxCell style="endArrow=classic;html=1;labelBackgroundColor=#F1FAEE;fontColor=#1D3557;strokeColor=#000000;" parent="1" edge="1">
                         <mxGeometry width="50" height="50" relative="1" as="geometry">
                             <mxPoint x="490" y="80" as="sourcePoint"/>
-                            <mxPoint x="40" y="80" as="targetPoint"/>
+                            <mxPoint x="60" y="80" as="targetPoint"/>
                         </mxGeometry>
                     </mxCell>
                 </object>
@@ -116,6 +116,16 @@
                 <object label="" type="POI" tag="robotHome" id="14">
                     <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e3c800;strokeColor=#B09500;fontColor=#ffffff;" parent="1" vertex="1">
                         <mxGeometry x="495" y="75" width="10" height="10" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="collisionWall" id="15">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e3c800;strokeColor=#B09500;fontColor=#ffffff;" parent="1" vertex="1">
+                        <mxGeometry x="49" y="75" width="10" height="10" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="&lt;font color=&quot;#000000&quot;&gt;Robot&lt;/font&gt;" type="robot" collision_tag="stopEvent" component_Claw="[80, 1]" component_Script="[[&quot;Go robotHome&quot;], 0]" id="16">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#B09500;fontColor=#ffffff;fillColor=#e3c800;" vertex="1" parent="1">
+                        <mxGeometry x="19" y="65" width="30" height="30" as="geometry"/>
                     </mxCell>
                 </object>
             </root>

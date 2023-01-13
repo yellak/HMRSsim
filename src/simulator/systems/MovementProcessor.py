@@ -43,10 +43,15 @@ class MovementProcessor(esper.Processor):
 
             if pos.x != new_x or pos.y != new_y or vel.alpha:
                 # print(f'MOVE {ent} - vel {vel}')
+                self.logger.info(f'dt: {dt}')
                 pos.changed = True
+                self.logger.info(f'current angle: {pos.angle}')
                 pos.angle = (pos.angle + (vel.alpha * dt)) % 360
+                self.logger.info(f'new angle: {pos.angle}')
                 new_x = min(self.maxx - pos.w, new_x)
                 new_y = min(self.maxy - pos.h, new_y)
+                self.logger.info(f'current position: x={pos.x}, y={pos.y}')
+                self.logger.info(f'new position: x={new_x}, y={new_y}')
                 pos.x = new_x
                 pos.y = new_y
                 pos.center = (pos.x + pos.w // 2, pos.y + pos.h // 2)

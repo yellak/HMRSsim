@@ -1,7 +1,11 @@
 from simulator import primitives as primitives
 from simulator.components.Velocity import Velocity
+from simulator.components.AngularVelocityControl import AngularVelocityControl
+from simulator.components.LinearVelocityControl import LinearVelocityControl
 from simulator.components.MovableBase import MovableBase
 from simulator.components.NavToPoseRosGoal import NavToPoseRosGoal
+import numpy as np
+import math
 
 from typing import Tuple, List
 from simulator.typehints.component_types import Component
@@ -20,5 +24,7 @@ def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
             ros_goal_comp.name = options["name"]
         components.append(Velocity(x=0, y=0))
         components.append(MovableBase())
+        components.append(LinearVelocityControl(output_limits=(-5, 5)))
+        components.append(AngularVelocityControl(output_limits=(-math.pi/8, math.pi/8)))
         components.append(ros_goal_comp)
     return components, options

@@ -1,6 +1,7 @@
 import threading
 import logging
 import json
+import math
 from queue import Queue
 from typing import Callable, List
 from simulator.typehints.dict_types import SystemArgs
@@ -90,8 +91,14 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
                     'y': position.y,
                     'width': position.w,
                     'height': position.h,
-                    'style': skeleton.style + (f"rotation={position.angle};" if isRobot else "")
+                    'style': skeleton.style 
                 }
+
+                rotate = math.degrees(position.angle)
+                if isRobot: 
+                    rotate = 180 - rotate
+                    data['style'] = update_style_rotation(data['style'], rotate)
+
                 new_message[skeleton.id] = data
                 last_round[ent] = (2, skeleton.id)
                 position.changed = False
@@ -117,3 +124,13 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
         thread.join(timeout=1)
 
     return process, clean
+
+def update_style_rotation(style: str, rotation: float):
+    result = style.find('rotation')
+    if result != -1:
+        end = style.find(';', result)
+        style = style[:result] + f"rotation={rotation}" + style[end:]
+    else:
+        style = style + f"rotation={rotation};"
+
+    return style

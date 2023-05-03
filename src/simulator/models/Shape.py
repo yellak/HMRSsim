@@ -2,6 +2,7 @@ from simulator import primitives as primitives
 from simulator.components.Collidable import Collidable
 from simulator.components.Position import Position
 from simulator.utils.helpers import parse_style
+import math
 
 from typing import Tuple, List
 from simulator.typehints.component_types import Component
@@ -11,7 +12,7 @@ MODEL = 'default'
 def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
     options = el.attrib
 
-    components, style = from_mxCell(el[0], line_width)
+    components, style = from_mxCell(el[0], options['type'], line_width)
     if 'collidable' not in options:
         options['collidable'] = True
     if 'movable' not in options:
@@ -24,7 +25,7 @@ def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
     return components, options
 
 
-def from_mxCell(el, lineWidth=10) -> Tuple[List[Component], dict]:
+def from_mxCell(el, type, lineWidth=10) -> Tuple[List[Component], dict]:
     # Parse style
     style = parse_style(el.attrib['style'])
     # Get parent
@@ -42,9 +43,9 @@ def from_mxCell(el, lineWidth=10) -> Tuple[List[Component], dict]:
     rotate = 0
     if style.get('rotation', '') != '':
         rotate = int(style['rotation'])
-        if rotate < 0:
-            rotate = 360 + rotate
-    pos.angle = rotate
+        if type == 'robot':
+            rotate = rotate + 180
+    pos.angle = math.radians(rotate) 
     center = (pos.x + pos.w // 2, pos.y + pos.h // 2)
 
     if 'ellipse' in style:

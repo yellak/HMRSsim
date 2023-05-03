@@ -1,3 +1,4 @@
+import math
 from collision import Poly, Vector
 from simulator.components.Collidable import Collidable
 from simulator.components.Position import Position
@@ -25,8 +26,8 @@ def from_mxCell(el, lineWidth=10):
     rotate = 0
     if 'rotation' in style:
         rotate = float(style['rotation'])
-        rotate = (360 + rotate) % 360
-    pos.angle = rotate
+        # rotate = (360 + rotate) % 360
+    pos.angle = math.radians(rotate)
 
     # Create collision box
     col_points = pos._get_box()

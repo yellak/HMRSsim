@@ -1,5 +1,6 @@
 import esper
 import logging
+import math
 
 from datetime import datetime, timedelta
 from simulator.typehints.dict_types import SystemArgs
@@ -24,7 +25,6 @@ class MovementProcessor(esper.Processor):
     def process(self, kwargs: SystemArgs):
         logger = logging.getLogger(__name__)
         dt: float = kwargs.get('DELTA_TIME', None)
-        # start = datetime.now()
 
         # The Movement Processor is responsible for managing the tiling of the simulation
         # When it starts (which is after the simulation is loaded) it will initialize the sector
@@ -37,16 +37,14 @@ class MovementProcessor(esper.Processor):
 
         # This will iterate over every Entity that has BOTH of these components:
         for ent, (vel, pos) in self.world.get_components(Velocity, Position):
-            # old = pos.center # DEBUG
             new_x = max(self.minx, pos.x + (vel.x * dt))
             new_y = max(self.miny, pos.y + (vel.y * dt))
 
             if pos.x != new_x or pos.y != new_y or vel.alpha:
-                # print(f'MOVE {ent} - vel {vel}')
                 self.logger.info(f'dt: {dt}')
                 pos.changed = True
                 self.logger.info(f'current angle: {pos.angle}')
-                pos.angle = (pos.angle + (vel.alpha * dt)) % 360
+                pos.angle = (pos.angle + (vel.alpha * dt)) % (2 * math.pi)
                 self.logger.info(f'new angle: {pos.angle}')
                 new_x = min(self.maxx - pos.w, new_x)
                 new_y = min(self.maxy - pos.h, new_y)
@@ -61,14 +59,8 @@ class MovementProcessor(esper.Processor):
                     for dx in [-1, -1, -1, 1, 1, 1, 0, 0, 0]
                     for dy in [0, -self.maxx, +self.maxx, 0, -self.maxx, +self.maxx, 0, -self.maxx, +self.maxx]
                 ]
-                # self.logger.debug(f'{old} --> {pos.center}')
             else:
                 pos.changed = False
-        # end = datetime.now()
-        # self.runs += 1
-        # self.total += end - start
-        # if self.runs % 50 == 0:
-        #     logger.debug(f'runs: {self.runs}; total: {self.total}; avg = {self.total / self.runs}')
 
     def add_sector_info(self, pos: Position):
         pos.sector = ((pos.y // self.sector_size) * self.maxx) + (pos.x // self.sector_size)

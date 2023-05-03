@@ -1,6 +1,7 @@
 import esper
 import simpy
 import logging
+import math
 from typing import List
 from simulator.typehints.dict_types import SystemArgs
 from simulator.typehints.build_types import WindowOptions
@@ -15,6 +16,8 @@ from simulator.components.NavToPoseRosGoal import NavToPoseRosGoal
 from simulator.typehints.ros_types import RosTopicServer
 from simulator.typehints.component_types import EVENT
 from simulator.systems.Nav2System import Nav2System
+from simulator.components.AngularVelocityControl import AngularVelocityControl
+from simulator.components.LinearVelocityControl import LinearVelocityControl
 
 RobotSpawnEventTag = 'RobotEntityEvent'
 RobotSpawnPayload = NamedTuple('RobotSpawnEvent', [('robot_definition', str)])
@@ -74,7 +77,10 @@ def init(ros_control=None):
                     "MovableBase": [5, 0.5]
                     # "Script": [["Go exit"], 10]
                 })
+
             ent = world.create_entity(*initialized_components)
+            world.add_component(ent, LinearVelocityControl(output_limits=(-5, 5)))
+            world.add_component(ent, AngularVelocityControl(output_limits=(-math.pi/8, math.pi/8)))
             draw2ent[ent_id] = [ent, {'type': type}]
             objects.append((ent, ent_id))
 

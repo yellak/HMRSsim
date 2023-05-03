@@ -2,7 +2,6 @@ import esper
 import math
 import logging
 from simulator.typehints.dict_types import SystemArgs
-import numpy as np
 
 from simpy import FilterStore
 
@@ -18,7 +17,7 @@ from simulator.utils.geometry import get_angle
 
 class DifferentialBaseKinematicProcessor(esper.Processor):
     def __init__(self):
-        super().__init__()
+        super().__init__()  
         self.controller = PID()
         self.logger = logging.getLogger(__name__)
 
@@ -45,16 +44,14 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
                 self.world.remove_component(ent, WayPointGoal)
                 return
             else:
-                # v, w = self.controller.get_control_inputs(np.deg2rad(pos_angle), np.deg2rad(wp_goal_angle), pos_center, point)
                 v = self.controller.get_output(lv_ctrl, pos_center, point, dt)
                 self.logger.info(f'linear velocity: {v}')
-                # v = 0
-                w = self.controller.get_output(av_ctrl, np.deg2rad(pos_angle), wp_goal_angle, dt)
+                w = self.controller.get_output(av_ctrl, pos_angle, wp_goal_angle, dt)
                 self.logger.info(f'angular velocity: {w}')
 
-                vel.x = v * math.cos(np.deg2rad(pos_angle))
+                vel.x = v * math.cos(pos_angle)
 
                 # The negative signal in vel y and omega, is because the vertical coordinate (y axe) is inverse
-                vel.y = - v * math.sin(np.deg2rad(pos_angle))
-                vel.alpha = - np.rad2deg(w)
+                vel.y = - v * math.sin(pos_angle)
+                vel.alpha = - w
                 self.logger.info(f'velocity: x={vel.x}, y={vel.y}, omega={vel.alpha}')

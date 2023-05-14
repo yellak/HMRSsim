@@ -45,6 +45,7 @@ class MovementProcessor(esper.Processor):
                 pos.changed = True
                 self.logger.info(f'current angle: {pos.angle}')
                 pos.angle = (pos.angle + (vel.alpha * dt)) % (2 * math.pi)
+                pos.r = (pos.r + (- vel.alpha * dt)) % (2 * math.pi)
                 self.logger.info(f'new angle: {pos.angle}')
                 new_x = min(self.maxx - pos.w, new_x)
                 new_y = min(self.maxy - pos.h, new_y)

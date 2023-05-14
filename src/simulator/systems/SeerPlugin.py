@@ -91,12 +91,15 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
                     'y': position.y,
                     'width': position.w,
                     'height': position.h,
-                    'style': skeleton.style 
+                    'style': skeleton.style, 
+                    'rotate': position.r
                 }
 
-                rotate = math.degrees(position.angle)
+                # rotate = math.degrees(position.angle)
+                rotate = math.degrees(position.r)
                 if isRobot: 
-                    rotate = 180 - rotate
+                    # rotate = 180 - rotate
+                    # rotate = rotate - 90
                     data['style'] = update_style_rotation(data['style'], rotate)
 
                 new_message[skeleton.id] = data
@@ -126,11 +129,21 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
     return process, clean
 
 def update_style_rotation(style: str, rotation: float):
-    result = style.find('rotation')
-    if result != -1:
-        end = style.find(';', result)
-        style = style[:result] + f"rotation={rotation}" + style[end:]
+
+    initial = style.find('rotation')
+    offset = 0
+    if initial != -1:
+        end = style.find(';', initial)
+        [_, value] = style[initial:end].split('=')
+        # offset = float(value)
+        style = style[:initial] + f"rotation={offset + rotation}" + style[end:]
+        # style = style[:initial] + f"rotation={rotation}" + style[end:]
     else:
-        style = style + f"rotation={rotation};"
+        style = style + f"rotation={offset+rotation};"
+        # style = style + f"rotation={rotation};"
+    aux = style.find('direction')
+    if aux != -1:
+        end = style.find(';', aux)
+        style = style[:aux] + style[end+1:]
 
     return style

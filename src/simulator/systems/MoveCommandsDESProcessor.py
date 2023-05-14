@@ -31,7 +31,8 @@ def init(ros_control=None):
                 continue
 
             # The negative signal is because the vertical coordinate (y axe) is inverse
-            new_goal = WayPointGoal(target, - get_angle(source, target))
+            # new_goal = WayPointGoal(target, - get_angle(source, target))
+            new_goal = WayPointGoal(target, get_angle(source, target))
             logger.info(f"New move command received: {new_goal}")
             world.add_component(payload.entity, new_goal)
             

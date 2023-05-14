@@ -40,12 +40,16 @@ def from_mxCell(el, type, lineWidth=10) -> Tuple[List[Component], dict]:
     # Create drawing
     pos = Position(x=x, y=y, w=width, h=height, movable=False)
 
+    orientation = 0
     rotate = 0
     if style.get('rotation', '') != '':
-        rotate = int(style['rotation'])
+        orientation = int(style['rotation'])
         if type == 'robot':
-            rotate = rotate + 180
-    pos.angle = math.radians(rotate) 
+            rotate = orientation
+            # orientation = orientation + 90
+
+    pos.angle = math.radians(- orientation) 
+    pos.r = math.radians(rotate)
     center = (pos.x + pos.w // 2, pos.y + pos.h // 2)
 
     if 'ellipse' in style:

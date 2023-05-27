@@ -44,7 +44,7 @@ class RosControlPlugin(object):
         action_server = ActionServer(self.node,
                                     service.get_service_type(),
                                     service.get_name(),
-                                    execute_callback=service.get_result_callback(),
+                                    execute_callback=service.get_execute_callback(),
                                     goal_callback=service.get_goal_callback(),
                                     handle_accepted_callback=service.get_handle_accepted_goal_callback(),
                                     cancel_callback=service.get_cancel_callback())
@@ -59,6 +59,9 @@ class RosControlPlugin(object):
         self.node.create_subscription(String, service.get_name(), service.get_listener_callback(), 10)
 
     def process(self, kwargs: SystemArgs):
+        """
+        This will spin ros nodes once and then run the processes methods in the services list
+        """
         while True:
             env: Environment = kwargs.get('ENV', None)
             sleep = env.timeout

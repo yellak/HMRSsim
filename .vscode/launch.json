@@ -24,6 +24,28 @@
                 // "${workspaceFolder}/examples/navigationSimulationRos/simulation.json"
                 "${workspaceFolder}/examples/hospitalSimulationRos/simulation.json"
             ]
-        }
+            // "program": "${workspaceFolder}/examples/hospitalSimulationRos/run.py",
+            // "console": "integratedTerminal",
+            // "cwd": "${workspaceFolder}/examples/hospitalSimulationRos",
+            // "args": [
+            //     "${workspaceFolder}/examples/hospitalSimulationRos/simulation.json"
+            // ]
+        },
+        // {
+        //     "name": "Docker: Python - General",
+        //     "type": "docker",
+        //     "request": "launch",
+        //     "preLaunchTask": "docker-run: debug",
+        //     "removeContainerAfterDebug": false,
+        //     "python": {
+        //         "pathMappings": [
+        //             {
+        //                 "localRoot": "${workspaceFolder}",
+        //                 "remoteRoot": "/etc/hmrsim"
+        //             }
+        //         ],
+        //         "projectType": "general"
+        //     }
+        // }
     ]
 }

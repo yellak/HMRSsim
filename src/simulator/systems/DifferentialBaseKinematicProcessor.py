@@ -8,7 +8,7 @@ from simpy import FilterStore
 from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
-from simulator.components.MovableBase import MovableBase
+from simulator.components.Rotatable import Rotatable
 from simulator.components.LinearVelocityControl import LinearVelocityControl 
 from simulator.components.AngularVelocityControl import AngularVelocityControl 
 from simulator.systems.controllers.PID import PID
@@ -25,7 +25,7 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
         event_store: FilterStore = kwargs.get('EVENT_STORE', None)
         env = kwargs.get('ENV', None)
         dt: float = kwargs.get('DELTA_TIME', None)
-        for ent, (pos, vel, wp_goal, mov_base, lv_ctrl, av_ctrl) in self.world.get_components(Position, Velocity, WayPointGoal, MovableBase, LinearVelocityControl, AngularVelocityControl):
+        for ent, (pos, vel, rot, wp_goal, lv_ctrl, av_ctrl) in self.world.get_components(Position, Velocity, Rotatable, WayPointGoal, LinearVelocityControl, AngularVelocityControl):
 
             point = wp_goal.point
             pos_center = pos.center

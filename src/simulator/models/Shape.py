@@ -12,7 +12,11 @@ MODEL = 'default'
 def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
     options = el.attrib
 
-    components, style = from_mxCell(el[0], options['type'], line_width)
+    orientation = 0
+    if 'orientation' in options:
+        orientation = - float(el.attrib['orientation'])
+
+    components, style = from_mxCell(el[0], orientation, line_width)
     if 'collidable' not in options:
         options['collidable'] = True
     if 'movable' not in options:
@@ -25,7 +29,8 @@ def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
     return components, options
 
 
-def from_mxCell(el, type, lineWidth=10) -> Tuple[List[Component], dict]:
+def from_mxCell(el, orientation, lineWidth=10) -> Tuple[List[Component], dict]:
+    components = []
     # Parse style
     style = parse_style(el.attrib['style'])
     # Get parent
@@ -40,22 +45,21 @@ def from_mxCell(el, type, lineWidth=10) -> Tuple[List[Component], dict]:
     # Create drawing
     pos = Position(x=x, y=y, w=width, h=height, movable=False)
 
-    orientation = 0
-    rotate = 0
+    rotation = 0
     if style.get('rotation', '') != '':
-        orientation = int(style['rotation'])
-        if type == 'robot':
-            rotate = orientation
-            # orientation = orientation + 90
+        rotation = float(style['rotation'])
+    rotation = rotation + orientation
+    pos.angle = math.radians(-rotation) 
 
-    pos.angle = math.radians(- orientation) 
-    pos.r = math.radians(rotate)
+    components.append(pos)
+
     center = (pos.x + pos.w // 2, pos.y + pos.h // 2)
-
     if 'ellipse' in style:
-        draw = primitives.Ellipse(center, width, height, style, rotate)
+        draw = primitives.Ellipse(center, width, height, style, rotation)
         col_points = draw._get_points()
     else:
         col_points = pos._get_box()
 
-    return [pos, Collidable([(center, col_points)])], style
+    components.append(Collidable([(center, col_points)]))
+
+    return components, style

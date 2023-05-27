@@ -11,7 +11,6 @@ class Position(Component):
         self.y = y
         self.w = w
         self.h = h
-        self.r = 0 # rotation
         self.angle = angle # angle in radians
         self.changed = False
         self.movable = movable

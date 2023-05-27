@@ -11,6 +11,8 @@ from esper import World
 
 from simulator.components.Skeleton import Skeleton
 from simulator.components.Position import Position
+from simulator.components.Rotatable import Rotatable
+from simulator.utils.helpers import update_style_rotation
 
 message_buffer = Queue()
 
@@ -40,8 +42,6 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
 
     def process(kwargs: SystemArgs):
         event_store = kwargs.get('EVENT_STORE', None)
-        draw2ent = kwargs.get('DRAW2ENT', None)
-        objects = kwargs.get('OBJECTS', None)
         world: World = kwargs.get('WORLD', None)
         env: Environment = kwargs.get('ENV', None)
         msg_idx = 0
@@ -78,29 +78,19 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
                     last_round[ent] = (2, skeleton.id)
                     continue
 
-                # Check if is a robot to add rotation attribute
-                isRobot = False
-                object_ = [item for item in objects if item[0] == ent]
-                if len(object_) > 0:
-                    ent_id = object_[0][1]
-                    isRobot = draw2ent[ent_id][1]['type'] == 'robot'
-
                 data = {
                     'value': skeleton.value,
                     'x': position.x,
                     'y': position.y,
                     'width': position.w,
                     'height': position.h,
-                    'style': skeleton.style, 
-                    'rotate': position.r
+                    'style': skeleton.style
                 }
 
-                # rotate = math.degrees(position.angle)
-                rotate = math.degrees(position.r)
-                if isRobot: 
-                    # rotate = 180 - rotate
-                    # rotate = rotate - 90
-                    data['style'] = update_style_rotation(data['style'], rotate)
+                if world.has_component(ent, Rotatable):
+                    rotatable = world.component_for_entity(ent, Rotatable)
+                    rotation = math.degrees(rotatable.rotation)
+                    data['style'] = update_style_rotation(data['style'], rotation)
 
                 new_message[skeleton.id] = data
                 last_round[ent] = (2, skeleton.id)
@@ -127,23 +117,3 @@ def init(consumers: List[Callable], scan_interval: float, also_log=False):
         thread.join(timeout=1)
 
     return process, clean
-
-def update_style_rotation(style: str, rotation: float):
-
-    initial = style.find('rotation')
-    offset = 0
-    if initial != -1:
-        end = style.find(';', initial)
-        [_, value] = style[initial:end].split('=')
-        # offset = float(value)
-        style = style[:initial] + f"rotation={offset + rotation}" + style[end:]
-        # style = style[:initial] + f"rotation={rotation}" + style[end:]
-    else:
-        style = style + f"rotation={offset+rotation};"
-        # style = style + f"rotation={rotation};"
-    aux = style.find('direction')
-    if aux != -1:
-        end = style.find(';', aux)
-        style = style[:aux] + style[end+1:]
-
-    return style

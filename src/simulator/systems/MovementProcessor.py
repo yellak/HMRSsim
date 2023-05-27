@@ -7,6 +7,7 @@ from simulator.typehints.dict_types import SystemArgs
 
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
+from simulator.components.Rotatable import Rotatable
 
 
 class MovementProcessor(esper.Processor):
@@ -36,7 +37,7 @@ class MovementProcessor(esper.Processor):
             self.created_tiles = True
 
         # This will iterate over every Entity that has BOTH of these components:
-        for ent, (vel, pos) in self.world.get_components(Velocity, Position):
+        for ent, (vel, pos, rot) in self.world.get_components(Velocity, Position, Rotatable):
             new_x = max(self.minx, pos.x + (vel.x * dt))
             new_y = max(self.miny, pos.y + (vel.y * dt))
 
@@ -45,7 +46,9 @@ class MovementProcessor(esper.Processor):
                 pos.changed = True
                 self.logger.info(f'current angle: {pos.angle}')
                 pos.angle = (pos.angle + (vel.alpha * dt)) % (2 * math.pi)
-                pos.r = (pos.r + (- vel.alpha * dt)) % (2 * math.pi)
+                # pos.r = (pos.r + (- vel.alpha * dt)) % (2 * math.pi)
+                rot.rotation = (rot.rotation - (vel.alpha * dt)) % (2 * math.pi) 
+
                 self.logger.info(f'new angle: {pos.angle}')
                 new_x = min(self.maxx - pos.w, new_x)
                 new_y = min(self.maxy - pos.h, new_y)

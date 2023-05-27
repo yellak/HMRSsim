@@ -26,6 +26,18 @@ def parse_style(style):
         s[key] = value
     return s
 
+def update_style_rotation(style: str, rotation: float):
+
+    initial = style.find('rotation')
+    if initial != -1:
+        end = style.find(';', initial)
+        [_, value] = style[initial:end].split('=')
+        style = style[:initial] + f"rotation={rotation}" + style[end:]
+    else:
+        style = style + f"rotation={rotation};"
+
+    return style
+
 
 def get_rel_points(center: Point, points: List[Point]) -> List[Vector]:
     return list(map(lambda x: Vector(x[0] - center[0], x[1] - center[1]), points))

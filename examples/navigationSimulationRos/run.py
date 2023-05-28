@@ -38,11 +38,11 @@ def main():
 
     NAMESPACE = 'navigation_ros'
 
-    ros2 = ROS2_conn()
+    # ros2 = ROS2_conn()
     NavigationSystemProcess = NavigationSystem.init()
     ros_control = RosControlPlugin(scan_interval=0.1)
     ros_control.create_topic_server(RobotSpawnDESProcessor.RobotSpawnerRos(event_store=eventStore))
-    ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS))
+    ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS, 0.25))
 
     # Defines and initializes esper.Processor for the simulation
     normal_processors = [

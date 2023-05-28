@@ -33,14 +33,15 @@ class RosControlPlugin(object):
         self.logger.info("Initialized rclpy.")
         self.node = RosControlNode()
         self.scan_interval = scan_interval
-        self.services = []
+        self.actionServices = []
+        self.topicServices = []
     
     def create_action_server(self, service: RosActionServer):
         """
         Creates an action server to the node of the RosControl with the service provided.
         Also adds the service to the services used in this plugin.
         """
-        self.services.append(service)
+        self.actionServices.append(service)
         action_server = ActionServer(self.node,
                                     service.get_service_type(),
                                     service.get_name(),
@@ -57,7 +58,7 @@ class RosControlPlugin(object):
         """
         service.publisher = self.node.create_publisher(String, service.get_name(), 10)
         service.subscription = self.node.create_subscription(String, service.get_name(), service.get_listener_callback(), 10)
-        self.services.append(service)
+        self.topicServices.append(service)
 
     def process(self, kwargs: SystemArgs):
         """
@@ -69,7 +70,11 @@ class RosControlPlugin(object):
             rclpy.spin_once(self.node, timeout_sec=0.1)
 
             # notifying the services
-            for service in self.services:
+            for service in self.actionServices:
+                service.process()
+            for service in self.topicServices:
+                service.publishing_count = self.node.count_publishers(service.get_name())
+                service.subscription_count = self.node.count_subscribers(service.get_name())
                 service.process()
             yield sleep(self.scan_interval)
 

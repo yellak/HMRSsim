@@ -12,6 +12,7 @@ from simulator.utils.create_components import initialize_components, import_exte
 
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
+from simulator.components.Rotatable import Rotatable
 from simulator.components.NavToPoseRosGoal import NavToPoseRosGoal
 from simulator.typehints.ros_types import RosTopicServer
 from simulator.typehints.component_types import EVENT
@@ -73,21 +74,21 @@ def init(ros_control=None):
                     "NavToPoseRosGoal": [robot.name],
                     "Skeleton": ['robot_' + str(
                         ent_id), "rounded=0;whiteSpace=wrap;html=1;strokeColor=#00FF00;fillColor=#000000;width=50;height=50;"],
-                    "Velocity": [0, 0],
-                    "MovableBase": [5, 0.5]
+                    "Velocity": [0, 0]
                     # "Script": [["Go exit"], 10]
                 })
 
             ent = world.create_entity(*initialized_components)
             world.add_component(ent, LinearVelocityControl(output_limits=(-5, 5)))
             world.add_component(ent, AngularVelocityControl(output_limits=(-math.pi/8, math.pi/8)))
+            world.add_component(ent, Rotatable(2 * math.pi, 0))
             draw2ent[ent_id] = [ent, {'type': type}]
             objects.append((ent, ent_id))
 
             # TODO Desacoplar o Nav2System daqui
             ros_services = Nav2System.create_services(event_store=event_store, world=world)
             for service in ros_services:
-                if any((hasattr(s, "robot_name") and s.robot_name == service.robot_name) for s in ros_control.services):
+                if any((hasattr(s, "robot_name") and s.robot_name == service.robot_name) for s in ros_control.actionServices):
                     continue
                 ros_control.create_action_server(service)
     

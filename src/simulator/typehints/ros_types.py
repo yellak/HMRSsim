@@ -16,6 +16,8 @@ class RosService(object):
 class RosTopicServer(RosService):
     publisher = None
     subscriber = None
+    publishing_count = 0
+    subscription_count = 0
 
     @abstractmethod
     def get_listener_callback(self):

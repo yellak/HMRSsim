@@ -6,12 +6,13 @@ import simulator.systems.ClawDESProcessor as ClawProcessor
 import simulator.systems.ManageObjects as ObjectManager
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
 import simulator.systems.SeerPlugin as Seer
+from simulator.systems.ROSeerSystem import ROSeerSystem
 import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
 from simulator.systems.Nav2System import Nav2System
 from simulator.systems.RosControlPlugin import RosControlPlugin
 
 from simulator.main import Simulator
-from simulator.utils.ROS2 import ROS2_conn
+# from simulator.utils.ROS2 import ROS2_conn
 
 from simulator.typehints.component_types import EVENT
 
@@ -40,7 +41,7 @@ def main():
 
     NAMESPACE = 'navigation_ros'
 
-    ros2 = ROS2_conn()
+    # ros2 = ROS2_conn()
     NavigationSystemProcess = NavigationSystem.init()
     ros_control = RosControlPlugin(scan_interval=0.1)
     claw_services = ClawProcessor.create_grab_and_drop_for_each_robot(world=world, event_store=eventStore)
@@ -49,6 +50,7 @@ def main():
     nav2_services = Nav2System.create_services(event_store=eventStore, world=world)
     for service in nav2_services:
         ros_control.create_action_server(service)
+    ros_control.create_topic_server(ROSeerSystem(0.25))
 
     # Defines and initializes esper.Processor for the simulation
     normal_processors = [
@@ -65,7 +67,7 @@ def main():
         (StopCollisionProcessor.process,),
         (ros_control.process, ros_control.end),
         (Nav2System.end_of_movement_event_listener,),
-        Seer.init([ros2.seer_consumer], 0.25, False)
+        # Seer.init([ros2.seer_consumer], 0.25, False)
     ]
 
     # Add processors to the simulation, according to processor type

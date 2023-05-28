@@ -55,8 +55,9 @@ class RosControlPlugin(object):
         Creates a topic server to the node of the RosControl with the service provided.
         Also adds the service to the services used in this plugin.
         """
+        service.publisher = self.node.create_publisher(String, service.get_name(), 10)
+        service.subscription = self.node.create_subscription(String, service.get_name(), service.get_listener_callback(), 10)
         self.services.append(service)
-        self.node.create_subscription(String, service.get_name(), service.get_listener_callback(), 10)
 
     def process(self, kwargs: SystemArgs):
         """

@@ -5,6 +5,7 @@ import simulator.systems.MoveCommandsDESProcessor as NavigationSystem
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
 import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
 import simulator.systems.SeerPlugin as Seer
+from simulator.systems.ROSeerSystem import ROSeerSystem
 from simulator.systems.Nav2System import Nav2System
 from simulator.systems.RosControlPlugin import RosControlPlugin
 from simulator.main import Simulator
@@ -41,6 +42,7 @@ def main():
     NavigationSystemProcess = NavigationSystem.init()
     ros_control = RosControlPlugin(scan_interval=0.1)
     ros_control.create_topic_server(RobotSpawnDESProcessor.RobotSpawnerRos(event_store=eventStore))
+    ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS))
 
     # Defines and initializes esper.Processor for the simulation
     normal_processors = [
@@ -51,7 +53,7 @@ def main():
 
     # Defines DES processors
     des_processors = [
-        Seer.init([ros2.seer_consumer], 0.25, False),
+        # Seer.init([ros2.seer_consumer], 0.25, False),
         (NavigationSystemProcess,),
         (ros_control.process, ros_control.end),
         (Nav2System.end_of_movement_event_listener,),

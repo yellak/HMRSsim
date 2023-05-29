@@ -31,7 +31,10 @@ class ROSeerSystem(RosTopicServer):
         self.world: World = kwargs.get('WORLD', None)
         self.env: Environment = kwargs.get('ENV', None)
 
-    def process(self):
+    def process(self, kwargs: SystemArgs):
+        event_store = kwargs.get('EVENT_STORE', None)
+        world: World = kwargs.get('WORLD', None)
+        env: Environment = kwargs.get('ENV', None)
 
 
         self.check_listener()
@@ -41,14 +44,17 @@ class ROSeerSystem(RosTopicServer):
 
         if self.event_store is None:
             raise Exception("Can't find eventStore")
-        elif self.env is None:
+        elif env is None:
             raise Exception("Can't find env")
+
+        self.check_listener()
+
         
         if self.msg_idx == 0:
 
             # Puts information about the simulation as the first message in the queue
             # window name, width and height
-            simulation_skeleton = self.world.component_for_entity(1, Skeleton)
+            simulation_skeleton = world.component_for_entity(1, Skeleton)
             size = json.loads(simulation_skeleton.style)
             new_message = {
                 "timestamp": -1,
@@ -60,7 +66,7 @@ class ROSeerSystem(RosTopicServer):
             self.last_round = {}
         else:
             new_message = {
-                "timestamp": round(float(self.env.now), 3)
+                "timestamp": round(float(env.now), 3)
             }
             for ent, (skeleton, position) in self.world.get_components(Skeleton, Position):
                 if ent == 1:  # Entity 1 is the entire model
@@ -78,8 +84,8 @@ class ROSeerSystem(RosTopicServer):
                     'style': skeleton.style
                 }
 
-                if self.world.has_component(ent, Rotatable):
-                    rotatable = self.world.component_for_entity(ent, Rotatable)
+                if world.has_component(ent, Rotatable):
+                    rotatable = world.component_for_entity(ent, Rotatable)
                     rotation = math.degrees(rotatable.rotation)
                     data['style'] = update_style_rotation(data['style'], rotation)
 

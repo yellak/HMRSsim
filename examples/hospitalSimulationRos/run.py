@@ -50,7 +50,7 @@ def main():
     nav2_services = Nav2System.create_services(event_store=eventStore, world=world)
     for service in nav2_services:
         ros_control.create_action_server(service)
-    ros_control.create_topic_server(ROSeerSystem(0.25))
+    ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS, 0.25))
 
     # Defines and initializes esper.Processor for the simulation
     normal_processors = [

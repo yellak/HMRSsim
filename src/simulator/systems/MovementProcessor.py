@@ -42,18 +42,18 @@ class MovementProcessor(esper.Processor):
             new_y = max(self.miny, pos.y + (vel.y * dt))
 
             if pos.x != new_x or pos.y != new_y or vel.alpha:
-                self.logger.info(f'dt: {dt}')
+                # self.logger.info(f'dt: {dt}')
                 pos.changed = True
-                self.logger.info(f'current angle: {pos.angle}')
+                # self.logger.info(f'current angle: {pos.angle}')
                 pos.angle = (pos.angle + (vel.alpha * dt)) % (2 * math.pi)
                 # pos.r = (pos.r + (- vel.alpha * dt)) % (2 * math.pi)
                 rot.rotation = (rot.rotation - (vel.alpha * dt)) % (2 * math.pi) 
 
-                self.logger.info(f'new angle: {pos.angle}')
+                # self.logger.info(f'new angle: {pos.angle}')
                 new_x = min(self.maxx - pos.w, new_x)
                 new_y = min(self.maxy - pos.h, new_y)
-                self.logger.info(f'current position: x={pos.x}, y={pos.y}')
-                self.logger.info(f'new position: x={new_x}, y={new_y}')
+                # self.logger.info(f'current position: x={pos.x}, y={pos.y}')
+                # self.logger.info(f'new position: x={new_x}, y={new_y}')
                 pos.x = new_x
                 pos.y = new_y
                 pos.center = (pos.x + pos.w // 2, pos.y + pos.h // 2)

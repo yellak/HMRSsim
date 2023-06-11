@@ -76,10 +76,6 @@ class RosControlPlugin(object):
                 service.publishing_count = self.node.count_publishers(service.get_name())
                 service.subscription_count = self.node.count_subscribers(service.get_name())
                 service.process()
-            for service in self.topicServices:
-                service.publishing_count = self.node.count_publishers(service.get_name())
-                service.subscription_count = self.node.count_subscribers(service.get_name())
-                service.process(kwargs)
             yield sleep(self.scan_interval)
 
     def end(self):

@@ -1,5 +1,6 @@
 from simulator.components.Position import Position
 from simulator.components.Velocity import Velocity
+from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Path import Path
 from simulator.components.NavToPoseRosGoal import NavToPoseRosGoal
 from simulator.typehints.ros_types import RosActionServer
@@ -171,7 +172,7 @@ class Nav2System(RosActionServer):
         vel.x = 0
         vel.y = 0
         vel.alpha = 0
-        self.world.remove_component(ent, Path)
+        self.world.remove_component(ent, WayPointGoal)
         ros_goal.goal_handle = None
 
     def get_goal_callback(self):

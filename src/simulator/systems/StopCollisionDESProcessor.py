@@ -2,12 +2,15 @@ import logging
 import esper
 import simpy
 from simulator.components.Position import Position
+from simulator.components.Velocity import Velocity
+from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.CollisionHistory import CollisionHistory
 from simulator.components.Path import Path
 from simulator.typehints.dict_types import SystemArgs
 
 from simulator.typehints.component_types import EVENT
 from simulator.systems.PathProcessor import EndOfPathTag, EndOfPathPayload
+from simulator.typehints.component_types import EVENT, EndOfMovementPayload, EndOfMovementTag, Point 
 StopEventTag = 'stopEvent'
 GenericCollisionTag = 'genericCollision'
 
@@ -36,6 +39,19 @@ def process(kwargs: SystemArgs):
             collision = world.component_for_entity(ent, CollisionHistory)
             collision.add_collision(otherEnt, kwargs.get('ENV').now, Position(position.x, position.y))
             continue
+
+
+        if world.has_component(ent, WayPointGoal):
+            wp_goal = world.component_for_entity(ent, WayPointGoal)
+            pos = world.component_for_entity(ent, Position)
+            vel = world.component_for_entity(ent, Velocity)
+            vel.x = 0
+            vel.y = 0
+            vel.alpha = 0
+            pos.changed = False
+            end_of_movement = EVENT(EndOfMovementTag, EndOfMovementPayload(ent, str(env.now), target=wp_goal.point, orientation=wp_goal.angle))
+            event_store.put(end_of_movement )
+            world.remove_component(ent, WayPointGoal)
 
         # If following path, remove it
         # This can cause failure of other systems.

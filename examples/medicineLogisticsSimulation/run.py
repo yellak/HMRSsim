@@ -1,0 +1,70 @@
+from simulator.systems.MovementProcessor import MovementProcessor
+from simulator.systems.CollisionProcessor import CollisionProcessor
+from simulator.systems.DifferentialBaseKinematicProcessor import DifferentialBaseKinematicProcessor as DiffBaseKinematicProcessor  
+import simulator.systems.MoveCommandsDESProcessor as NavigationSystem
+import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
+import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
+from simulator.systems.ROSeerSystem import ROSeerSystem
+from simulator.systems.Nav2System import Nav2System
+from simulator.systems.RosControlPlugin import RosControlPlugin
+from simulator.main import Simulator
+import rclpy
+import logging
+import sys
+
+
+from simulator.typehints.component_types import EVENT
+from typing import NamedTuple
+
+def main():
+    rclpy.init()
+    logger = logging.getLogger(__name__)
+    logging.basicConfig()
+    logging.root.setLevel(logging.DEBUG)
+
+    # Create a simulation with config
+    if len(sys.argv) <= 1:
+        logger.error("You have to specify a path to a simulation file")
+        exit()
+    simulator = Simulator(sys.argv[1])
+    # Some simulator objects
+    width, height = simulator.window_dimensions
+    eventStore = simulator.KWARGS['EVENT_STORE']
+    world = simulator.KWARGS['WORLD']
+    exitEvent = simulator.EXIT_EVENT
+    env = simulator.ENV
+
+    NAMESPACE = 'medicine_logistics'
+
+    NavigationSystemProcess = NavigationSystem.init()
+    ros_control = RosControlPlugin(scan_interval=0.1)
+    ros_control.create_topic_server(RobotSpawnDESProcessor.RobotSpawnerRos(event_store=eventStore))
+    ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS, 0.25))
+
+    # Defines and initializes esper.Processor for the simulation
+    normal_processors = [
+        MovementProcessor(minx=0, miny=0, maxx=width, maxy=height),
+        CollisionProcessor(),
+        DiffBaseKinematicProcessor(),
+    ]
+
+    # Defines DES processors
+    des_processors = [
+        # Seer.init([ros2.seer_consumer], 0.25, False),
+        (NavigationSystemProcess,),
+        (ros_control.process, ros_control.end),
+        (Nav2System.end_of_movement_event_listener,),
+        (StopCollisionProcessor.process,),
+        (RobotSpawnDESProcessor.init(ros_control=ros_control),)
+    ]
+
+    # Add processors to the simulation, according to processor type
+    for p in normal_processors:
+        simulator.add_system(p)
+    for p in des_processors:
+        simulator.add_des_system(p)
+
+    simulator.run()
+
+if __name__ == '__main__':
+    main()

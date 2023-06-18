@@ -79,8 +79,8 @@ def init(ros_control=None):
                 })
 
             ent = world.create_entity(*initialized_components)
-            world.add_component(ent, LinearVelocityControl(output_limits=(-10, 10)))
-            world.add_component(ent, AngularVelocityControl(output_limits=(-math.pi/8, math.pi/8)))
+            world.add_component(ent, LinearVelocityControl(output_limits=(-5, 5)))
+            world.add_component(ent, AngularVelocityControl(output_limits=(-math.pi/4, math.pi/4)))
             world.add_component(ent, Rotatable(2 * math.pi, 0))
             draw2ent[ent_id] = [ent, {'type': type}]
             objects.append((ent, ent_id))

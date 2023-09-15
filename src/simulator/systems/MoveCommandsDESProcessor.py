@@ -21,7 +21,7 @@ def init(ros_control=None):
             logger.debug(f'Target position: {target} and orientation: {orientation}')
             entity_pos = world.component_for_entity(payload.entity, Position)
             source = entity_pos.center
-            logger.info(f"Current position: x={source[0]}, y={source[1]}, theta={entity_pos.angle}")
+            logger.info(f"Current position: x={source[0]:.2f}, y={source[1]:.2f}, theta={entity_pos.angle:.2f}")
             if target == source:
                 logger.warning("WARN - Already at destination")
                 continue

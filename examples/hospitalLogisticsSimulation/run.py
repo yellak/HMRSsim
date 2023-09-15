@@ -2,6 +2,7 @@ from simulator.systems.MovementProcessor import MovementProcessor
 from simulator.systems.CollisionProcessor import CollisionProcessor
 from simulator.systems.DifferentialBaseKinematicProcessor import DifferentialBaseKinematicProcessor as DiffBaseKinematicProcessor  
 import simulator.systems.MoveCommandsDESProcessor as NavigationSystem
+import simulator.systems.ClawDESProcessor as ClawProcessor
 import simulator.systems.RobotSpawnDESProcessor as RobotSpawnDESProcessor
 import simulator.systems.StopCollisionDESProcessor as StopCollisionProcessor
 from simulator.systems.ROSeerSystem import ROSeerSystem
@@ -38,7 +39,12 @@ def main():
 
     NavigationSystemProcess = NavigationSystem.init()
     ros_control = RosControlPlugin(scan_interval=0.1)
-    ros_control.create_topic_server(RobotSpawnDESProcessor.RobotSpawnerRos(event_store=eventStore))
+    claw_services = ClawProcessor.create_grab_and_drop_for_each_robot(world=world, event_store=eventStore)
+    for service in claw_services:
+        ros_control.create_action_server(service)
+    nav2_services = Nav2System.create_services(event_store=eventStore, world=world)
+    for service in nav2_services:
+        ros_control.create_action_server(service)
     ros_control.create_topic_server(ROSeerSystem(simulator.KWARGS, 0.25))
 
     # Defines and initializes esper.Processor for the simulation

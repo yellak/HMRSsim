@@ -1,7 +1,0 @@
-{
-    "context": ".",
-    "map": "examples/medicineLogisticsSimulation/hospital_two_floors.drawio",
-    "FPS": 60,
-    "DLW": 10,
-    "verbose": 20
-}

@@ -1,10 +1,10 @@
 <mxfile host="65bd71144e">
     <diagram id="Yp99EcE86TbjtTeTYBdj" name="Hospital Scenario 0">
-        <mxGraphModel dx="765" dy="620" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" background="#F1FAEE" math="0" shadow="0">
+        <mxGraphModel dx="722" dy="573" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" background="#F1FAEE" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <object label="&lt;font color=&quot;#000000&quot;&gt;Robot&lt;/font&gt;" type="robot" collision_tag="stopEvent" component_Claw="[80, 1]" name="wall_e" id="XaaZAw79OCWD7nJUf5TW-4">
+                <object label="&lt;font color=&quot;#000000&quot;&gt;Robot&lt;/font&gt;" type="robot" collision_tag="stopEvent" component_Claw="[80, 1]" name="wall_e" orientation="180" id="XaaZAw79OCWD7nJUf5TW-4">
                     <mxCell style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#B09500;fontColor=#ffffff;fillColor=#e3c800;" parent="1" vertex="1">
                         <mxGeometry x="500" y="65" width="45" height="30" as="geometry"/>
                     </mxCell>

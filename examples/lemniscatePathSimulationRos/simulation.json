@@ -1,0 +1,10 @@
+{
+    "context": ".",
+    "map": "examples/lemniscatePathSimulationRos/lemniscate.drawio",
+    "FPS": 1,
+    "DLW": 10,
+    "verbose": 20,
+    "simulatorConfigOptions": {
+        "loggerConfig": "examples/lemniscatePathSimulationRos/loggerConfig.yml"
+    }
+}

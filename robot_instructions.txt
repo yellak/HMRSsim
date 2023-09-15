@@ -1,9 +1,9 @@
 
 spawn wall_e:
-ros2 topic pub /spawn_robot std_msgs/String 'data: <robot name="wall_e"> <link name="link1" /> <joint name="joint1" type="continuous"> <parent link="link1"/> <child link="link2"/> <origin xyz="5 3 0" rpy="0 0 0" /> </joint> </robot>'
+ros2 topic pub --once /spawn_robot std_msgs/String 'data: <robot name="wall_e"> <link name="link1" /> <joint name="joint1" type="continuous"> <parent link="link1"/> <child link="link2"/> <origin xyz="5 3 0" rpy="0 0 0" /> </joint> </robot>'
 
 spawn r2d2:
-ros2 topic pub /spawn_robot std_msgs/String 'data: <robot name="r2d2"> <link name="link1" /> <joint name="joint1" type="continuous"> <parent link="link1"/> <child link="link2"/> <origin xyz="125 30 0" rpy="0 0 0" /> </joint> </robot>'
+ros2 topic pub --once /spawn_robot std_msgs/String 'data: <robot name="r2d2"> <link name="link1" /> <joint name="joint1" type="continuous"> <parent link="link1"/> <child link="link2"/> <origin xyz="125 30 0" rpy="0 0 0" /> </joint> </robot>'
 
 ros2 action send_goal navigate_to_pose/wall_e nav2_msgs/action/NavigateToPose "{pose: {  pose: { position: {x: 525, y: 205, z: 1} } } }" --feedback
 

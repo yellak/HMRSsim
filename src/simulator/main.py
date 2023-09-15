@@ -241,10 +241,14 @@ class Simulator:
         # Collect info
         # Other processors
         while not self.EXIT:
-            start = datetime.now()
+            # start = datetime.now().timestamp()
+            # print(f'start: {start}')
             self.calculate_delta_time()
             if sleep_interval:
                 process_esper_systems(self.KWARGS)
+            # end = datetime.now().timestamp()
+            # print(f'end: {end}')
+            # print(f'diff: {end-start}')
             # # ticks on the clock
             if sleep_interval:
                 switch = yield kill_switch | sleep(sleep_interval, False)

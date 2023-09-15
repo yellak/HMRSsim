@@ -25,26 +25,21 @@ class PID():
 
         # Compute error terms using component specif diff function
         error = ctrl.diff(input_, target)
-        # self.logger.info(f'error: {error}')
         d_error = error - (ctrl.last_error if (ctrl.last_error is not None) else error)
         ctrl.integrator = ctrl.integrator + error * dt
 
         # Compute the proportional term
         ctrl.proportional = ctrl.Kp * error
-        # self.logger.info(f'proportional term: {ctrl.proportional}')
 
         # Compute the integral term
         ctrl.integral = ctrl.Ki * ctrl.integrator
         ctrl.integral = _clamp(ctrl.integral, ctrl.output_limits)
-        # self.logger.info(f'integral term: {ctrl.integral}')
 
         # Compute the derivative term
         ctrl.derivative = ctrl.Kd * d_error / dt
-        # self.logger.info(f'derivative term: {ctrl.derivative}')
 
         output = ctrl.proportional + ctrl.integral + ctrl.derivative
         output = _clamp(output, ctrl.output_limits)
-        # self.logger.info(f'output: {output}')
 
         # Keep track of state on ctrl component
         ctrl.last_error = error

@@ -4,6 +4,7 @@ import logging
 from simulator.typehints.dict_types import SystemArgs
 
 from simpy import FilterStore
+from simulator.utils.geometry import get_distance
 
 from simulator.components.WayPointGoal import WayPointGoal
 from simulator.components.Position import Position
@@ -19,6 +20,7 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
     def __init__(self):
         super().__init__()  
         self.controller = PID()
+        self.approx_error = 5
         self.logger = logging.getLogger(__name__)
 
     def process(self, kwargs: SystemArgs):
@@ -34,7 +36,8 @@ class DifferentialBaseKinematicProcessor(esper.Processor):
             wp_goal_angle = - get_angle(pos_center, point)
             # self.logger.info(f'dt: {dt}')
 
-            if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(wp_goal_angle * 100):
+            # if int(pos_center[0] * 100) == int(point[0] * 100) and int(pos_center[1] * 100) == int(point[1] * 100) and int(pos_angle * 100) == int(wp_goal_angle * 100):
+            if get_distance(pos.center, point) < self.approx_error:
                 vel.x = 0
                 vel.y = 0
                 vel.alpha = 0

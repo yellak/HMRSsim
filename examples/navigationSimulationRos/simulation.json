@@ -1,10 +1,7 @@
 {
     "context": ".",
-    "map": "examples/navigationSimulationRos/poi_test.drawio",
+    "map": "examples/navigationSimulationRos/poi_test_new.drawio",
     "FPS": 1,
     "DLW": 10,
-    "verbose": 20,
-    "simulatorConfigOptions": {
-        "loggerConfig": "examples/navigationSimulationRos/loggerConfig.yml"
-    }
+    "verbose": 20
 }

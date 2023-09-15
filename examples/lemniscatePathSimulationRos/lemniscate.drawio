@@ -1,0 +1,90 @@
+<mxfile host="65bd71144e">
+    <diagram id="nFHqeYb1Vjg3AZ5FSIf_" name="Lemniscate Path Test">
+        <mxGraphModel dx="625" dy="573" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="583" pageHeight="413" background="#F1FAEE" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <object label="" type="POI" tag="1" display="true" id="8">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="135" y="82" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="12" display="true" id="9">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="135" y="333" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="5" display="true" id="10">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="435" y="333" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="14" display="true" id="11">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="13" y="211" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="7" display="true" id="12">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="553" y="211" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="9" display="true" id="13">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="435" y="82" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="3" display="true" id="16">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="295" y="211" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="15" display="true" id="17">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="45" y="124" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="13" display="true" id="18">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="45" y="294" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="2" display="true" id="19">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="235" y="124" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="11" display="true" id="20">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="235" y="294" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="10" display="true" id="21">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="345" y="124" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="4" display="true" id="22">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="345" y="294" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="6" display="true" id="23">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="515" y="294" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="POI" tag="8" display="true" id="24">
+                    <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#e51400;fontColor=#ffffff;strokeColor=#B20000;" parent="1" vertex="1">
+                        <mxGeometry x="515" y="124" width="16" height="16" as="geometry"/>
+                    </mxCell>
+                </object>
+                <object label="" type="robot" name="R2D2" id="7">
+                    <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#6a00ff;fontColor=#ffffff;strokeColor=#3700CC;" parent="1" vertex="1">
+                        <mxGeometry x="44" y="40" width="32" height="32" as="geometry"/>
+                    </mxCell>
+                </object>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

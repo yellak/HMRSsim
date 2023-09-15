@@ -31,6 +31,6 @@ def from_object(el, line_width=10) -> Tuple[List[Component], dict]:
         components.append(ros_goal_comp)
         components.append(Rotatable(orientation=math.radians(orientation), rotation=math.radians(rotation)))
         components.append(Velocity(x=0, y=0))
-        components.append(LinearVelocityControl(output_limits=(-5, 5)))
+        components.append(LinearVelocityControl(output_limits=(-10, 10)))
         components.append(AngularVelocityControl(output_limits=(-math.pi/8, math.pi/8)))
     return components, options
